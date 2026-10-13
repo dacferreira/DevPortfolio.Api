@@ -2,6 +2,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevPortfolio.Domain\DevPortfolio.Domain.csproj" />
+    <ProjectReference Include="..\DevPortfolio.Application\DevPortfolio.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.21" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
   </ItemGroup>
 
   <PropertyGroup>

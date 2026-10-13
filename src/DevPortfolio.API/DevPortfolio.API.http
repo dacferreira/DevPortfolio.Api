@@ -1,6 +1,26 @@
 @DevPortfolio.API_HostAddress = http://localhost:5128
 
-GET {{DevPortfolio.API_HostAddress}}/weatherforecast/
-Accept: application/json
+# 1. Emite o token anti-CSRF (cookie XSRF-TOKEN). Copie o valor para a variável abaixo.
+GET {{DevPortfolio.API_HostAddress}}/api/auth/csrf
+
+###
+
+@xsrf = cole-aqui-o-valor-do-cookie-XSRF-TOKEN
+
+# 2. Login (o cookie de sessão é HttpOnly)
+POST {{DevPortfolio.API_HostAddress}}/api/auth/login
+Content-Type: application/json
+X-XSRF-TOKEN: {{xsrf}}
+
+{
+  "email": "diogo@email.com",
+  "senha": "sua-senha",
+  "lembrarDeMim": false
+}
+
+###
+
+# 3. Usuário da sessão atual
+GET {{DevPortfolio.API_HostAddress}}/api/auth/me
 
 ###

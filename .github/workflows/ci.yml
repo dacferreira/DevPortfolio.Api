@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restaurar dependências
+        run: dotnet restore DevPortfolio.sln
+
+      - name: Build
+        run: dotnet build DevPortfolio.sln --no-restore --configuration Release
+
+      - name: Testes com cobertura
+        run: dotnet test DevPortfolio.sln --no-build --configuration Release --collect:"XPlat Code Coverage" --results-directory ./cobertura
+
+      - name: Publicar relatório de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-api
+          path: cobertura
