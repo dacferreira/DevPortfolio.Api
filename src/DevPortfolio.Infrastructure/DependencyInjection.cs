@@ -19,6 +19,7 @@ public static class DependencyInjection
             options.UseMySql(connectionString, VersaoMySql, mysql => mysql.EnableRetryOnFailure()));
 
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        services.AddScoped<ITokenRedefinicaoSenhaRepository, TokenRedefinicaoSenhaRepository>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
         return services;

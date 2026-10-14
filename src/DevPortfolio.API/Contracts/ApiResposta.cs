@@ -36,5 +36,7 @@ public static class CodigosErro
     public const string DadosInvalidos = "DADOS_INVALIDOS";
     public const string CsrfInvalido = "CSRF_INVALIDO";
     public const string MuitasTentativas = "MUITAS_TENTATIVAS";
+    public const string EmailJaCadastrado = "EMAIL_JA_CADASTRADO";
+    public const string TokenInvalido = "TOKEN_INVALIDO";
     public const string ErroInterno = "ERRO_INTERNO";
 }

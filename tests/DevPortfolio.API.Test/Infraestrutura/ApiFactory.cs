@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DevPortfolio.API.Test.Infraestrutura;
 
@@ -39,8 +40,14 @@ public class ApiFactory : WebApplicationFactory<Program>
 
             // Limite alto para os testes não esbarrarem na proteção contra força bruta.
             services.Configure<SegurancaOptions>(options => options.LimiteTentativasLogin = 1000);
+
+            // Nenhum e-mail real é enviado nos testes.
+            services.RemoveAll<IEmailService>();
+            services.AddSingleton<IEmailService>(Emails);
         });
     }
+
+    public EmailServiceCapturado Emails { get; } = new();
 
     public HttpClient CriarCliente() =>
         CreateClient(new WebApplicationFactoryClientOptions

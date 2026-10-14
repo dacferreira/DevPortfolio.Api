@@ -12,6 +12,7 @@ public class DevPortfolioDbContext : DbContext
     }
 
     public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<TokenRedefinicaoSenha> TokensRedefinicaoSenha => Set<TokenRedefinicaoSenha>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

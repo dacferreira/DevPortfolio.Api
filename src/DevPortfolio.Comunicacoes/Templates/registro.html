@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo ao Diogo.dev</title>
+  <style>
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #020914;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #e8eef7;
+}
+.wrapper {
+  width: 100%;
+  background-color: #020914;
+  padding: 40px 16px;
+}
+.container {
+  max-width: 620px;
+  margin: 0 auto;
+  background-color: #06111f;
+  border: 1px solid #18314d;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.header {
+  padding: 28px 32px;
+  border-bottom: 1px solid #18314d;
+}
+.logo {
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.logo span {
+  color: #3b82f6;
+}
+.badge {
+  display: inline-block;
+  margin-top: 8px;
+  color: #8293ad;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.content {
+  padding: 40px 32px;
+}
+.eyebrow {
+  color: #5f8dff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 10px 0 16px;
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1.25;
+}
+p {
+  color: #aebbd0;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+.highlight {
+  color: #ffffff;
+  font-weight: 700;
+}
+.button {
+  display: inline-block;
+  background-color: #1677ff;
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 8px;
+  margin: 10px 0 24px;
+}
+.info {
+  background-color: #07182a;
+  border: 1px solid #173556;
+  border-radius: 10px;
+  padding: 18px;
+  margin: 24px 0;
+}
+.info p {
+  margin: 0;
+  font-size: 13px;
+}
+.divider {
+  height: 1px;
+  background-color: #18314d;
+  margin: 28px 0;
+}
+.footer {
+  padding: 24px 32px;
+  border-top: 1px solid #18314d;
+  text-align: center;
+}
+.footer p {
+  color: #64758e;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 0;
+}
+.footer a {
+  color: #6b8cff;
+  text-decoration: none;
+}
+@media only screen and (max-width: 600px) {
+  .wrapper { padding: 16px 8px; }
+  .header, .content, .footer { padding-left: 22px; padding-right: 22px; }
+  h1 { font-size: 24px; }
+  .button { display: block; text-align: center; }
+}
+</style>
+</head>
+<body>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td class="wrapper">
+        <table role="presentation" class="container" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td class="header">
+              <a href="{{APP_URL}}" class="logo">Diogo<span>.dev</span></a><br>
+              <span class="badge">Engenharia de Software · Portfólio</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="content">
+              <div class="eyebrow">Conta criada com sucesso</div>
+              <h1>Bem-vindo, {{NOME}}! 🚀</h1>
+
+              
+    <p>
+      Sua conta no <span class="highlight">Diogo.dev</span> foi criada com sucesso.
+    </p>
+    <p>
+      Agora você poderá acompanhar projetos, experiências, estudos e conteúdos
+      compartilhados no meu portfólio.
+    </p>
+    
+
+              <div style="text-align:center;">
+                <a href="{{APP_URL}}/login" class="button">Acessar minha conta</a>
+              </div>
+
+              
+    <div class="info">
+      <p>
+        <strong style="color:#ffffff;">E-mail cadastrado</strong><br>
+        {{EMAIL}}
+      </p>
+    </div>
+    
+
+              
+    <p>
+      Obrigado por fazer parte! Espero que você aproveite a experiência.
+    </p>
+    
+
+              <div class="divider"></div>
+
+              <p style="font-size:12px;color:#71839c;">
+                Se você não solicitou esta ação, pode ignorar este e-mail com segurança.
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="footer">
+              <p>
+                © {{YEAR}} Diogo.dev · Todos os direitos reservados.<br>
+                Este é um e-mail automático. Por favor, não responda diretamente a esta mensagem.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

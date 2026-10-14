@@ -17,6 +17,13 @@ public class SegurancaOptions
     public int LimiteTentativasLogin { get; set; } = 5;
 
     public int JanelaTentativasLoginSegundos { get; set; } = 60;
+
+    /// <summary>
+    /// Quantos proxies reversos ficam entre o navegador e a API (ex.: Vercel + balanceador do host = 2).
+    /// Com 0 (padrão), os headers X-Forwarded-* são ignorados. Só os últimos N saltos são considerados,
+    /// para que um cliente não consiga forjar o próprio IP e escapar do limite de tentativas.
+    /// </summary>
+    public int QuantidadeProxies { get; set; }
 }
 
 public class UsuarioInicialOptions

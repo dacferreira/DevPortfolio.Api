@@ -1,5 +1,8 @@
 using DevPortfolio.API.Configuration;
 using DevPortfolio.Application;
+using DevPortfolio.Application.Conta;
+using DevPortfolio.Comunicacoes;
+using DevPortfolio.Comunicacoes.Email;
 using DevPortfolio.Infrastructure;
 using DevPortfolio.Infrastructure.Persistence;
 
@@ -15,13 +18,21 @@ if (string.IsNullOrWhiteSpace(connectionString) && !builder.Environment.IsEnviro
         "ou a variável de ambiente ConnectionStrings__DevPortfolio (veja o README).");
 }
 
+builder.Services.Configure<ContaOptions>(builder.Configuration.GetSection(ContaOptions.Secao));
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection(EmailOptions.Secao));
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(connectionString ?? string.Empty);
+builder.Services.AddComunicacoes();
 builder.Services.AddSeguranca(builder.Configuration);
 builder.Services.AddControllers().AddRespostasPadronizadas();
 builder.Services.AddSwaggerDocumentado();
 
 var app = builder.Build();
+
+// Atrás de proxy (Vercel + host da API) a requisição chega em HTTP e com o IP do proxy:
+// os headers X-Forwarded-* restauram o protocolo (HTTPS) e o IP real do cliente.
+app.UseProxiesReversos();
 
 app.UseTratamentoDeErros();
 

@@ -3,6 +3,7 @@ using System.Threading.RateLimiting;
 using DevPortfolio.API.Contracts;
 using DevPortfolio.API.Filters;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -11,6 +12,9 @@ namespace DevPortfolio.API.Configuration;
 public static class SegurancaExtensions
 {
     public const string PoliticaLogin = "login";
+
+    // Cadastro e recuperação de senha: limite próprio, para não consumir as tentativas de login.
+    public const string PoliticaConta = "conta";
     public const string CookieSessao = "devportfolio.sessao";
     public const string CookieAntiforgery = "devportfolio.antiforgery";
 
@@ -58,22 +62,12 @@ public static class SegurancaExtensions
             options.Cookie.SameSite = SameSiteMode.Strict;
         });
 
-        // Limita tentativas de login por IP (proteção contra força bruta).
+        // Limita tentativas por IP (proteção contra força bruta e envio abusivo de e-mails).
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            options.AddPolicy(PoliticaLogin, httpContext =>
-            {
-                var limite = httpContext.RequestServices.GetRequiredService<IOptions<SegurancaOptions>>().Value;
-                var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "desconhecido";
-
-                return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = limite.LimiteTentativasLogin,
-                    Window = TimeSpan.FromSeconds(limite.JanelaTentativasLoginSegundos),
-                    QueueLimit = 0,
-                });
-            });
+            options.AddPolicy(PoliticaLogin, LimitePorIp);
+            options.AddPolicy(PoliticaConta, LimitePorIp);
             options.OnRejected = (contexto, _) =>
             {
                 if (contexto.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
@@ -118,6 +112,38 @@ public static class SegurancaExtensions
         return app.UseExceptionHandler(erro => erro.Run(contexto =>
             EscreverFalhaAsync(contexto, StatusCodes.Status500InternalServerError,
                 CodigosErro.ErroInterno, "Ocorreu um erro inesperado. Tente novamente.")));
+    }
+
+    public static IApplicationBuilder UseProxiesReversos(this IApplicationBuilder app)
+    {
+        var quantidadeProxies = app.ApplicationServices.GetRequiredService<IOptions<SegurancaOptions>>().Value.QuantidadeProxies;
+        if (quantidadeProxies <= 0)
+            return app;
+
+        var opcoes = new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+            ForwardLimit = quantidadeProxies,
+        };
+
+        // Os IPs dos proxies (Vercel, balanceador) variam; a proteção fica no ForwardLimit.
+        opcoes.KnownNetworks.Clear();
+        opcoes.KnownProxies.Clear();
+
+        return app.UseForwardedHeaders(opcoes);
+    }
+
+    private static RateLimitPartition<string> LimitePorIp(HttpContext httpContext)
+    {
+        var limite = httpContext.RequestServices.GetRequiredService<IOptions<SegurancaOptions>>().Value;
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "desconhecido";
+
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = limite.LimiteTentativasLogin,
+            Window = TimeSpan.FromSeconds(limite.JanelaTentativasLoginSegundos),
+            QueueLimit = 0,
+        });
     }
 
     private static Task EscreverFalhaAsync(HttpContext contexto, int statusCode, string codigo, string mensagem)
